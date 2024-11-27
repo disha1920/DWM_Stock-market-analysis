@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Prediction App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+
+        }
+
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: #4a4a4a;
+        }
+
+        .btn-primary {
+            background-color: #1e90ff;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #007bff;
+        }
+
+        .graph-container {
+            height: 400px;
+        }
+
+        .alert {
+            text-align: center;
+        }
+
+        .recommendation {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            border-color: #007bff;
+        }
+
+        .prediction-summary {
+            background-color: #e6f7ff;
+            border-left: 5px solid #1e90ff;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-top: 1px solid #ddd;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-chart-line"></i> Stock Price Prediction App</h1>
+
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            <i class="fa fa-exclamation-triangle"></i> {{ error_message }}
+        </div>
+        {% endif %}
+
+        <div class="card p-4">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="ticker" class="form-label">Enter Stock Ticker</label>
+                    <input type="text" class="form-control" id="ticker" name="ticker" placeholder="e.g., AAPL, MSFT" required>
+                </div>
+                <div class="mb-3">
+                    <label for="month" class="form-label">Select Month</label>
+                    <select class="form-select" id="month" name="month" required>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i> Get Stock Data</button>
+            </form>
+        </div>
+
+        {% if company_details %}
+        <div class="card p-4 mt-4">
+            <h5><i class="fa fa-building"></i> Company Details</h5>
+            <p><strong>Name:</strong> {{ company_details.name }}</p>
+            <p><strong>Description:</strong> {{ company_details.description }}</p>
+            <p><strong>Recommendation:</strong> <span class="text-success">{{ decision }}</span></p>
+        </div>
+        {% endif %}
+
+        {% for graph in graphs %}
+        <div class="card p-4 mt-4">
+            <div class="graph-container">
+                {{ graph | safe }}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if accuracies %}
+        <div class="card p-4 mt-4">
+            <h5><i class="fa-solid fa-chart-pie"></i> Model Accuracies</h5>
+            <ul>
+                {% for model, accuracy in accuracies.items() %}
+                <li><strong>{{ model }}:</strong> {{ accuracy }}%</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if summary %}
+        <div class="prediction-summary">
+            <i class="fa fa-info-circle"></i> {{ summary }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>Powered by <a href="https://polygon.io" target="_blank">Polygon.io</a> | Created by Your Name</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
